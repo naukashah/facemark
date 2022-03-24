@@ -16,12 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from fireapp import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
+    path('',views.index,name='index'),
+    path('attendance_list', views.attendance_list, name='attendance_list'),
+    path('add_record', views.add_record, name='add_record'),
+    path('camera', views.camera, name='camera'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # urlpatterns = [
 #     path('admin/', admin.site.urls),
 # ]

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Report</title>
+    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.1.3/minty/bootstrap.min.css"
+    />
+    
+</head>
+<body>
+  
+    <!-- <input type="button" onclick="addRecord()"  value="Create Table From JSON" > -->
+    <!-- <p style="text-align:center; margin-top: 5em; margin-right: 15em;  margin-left: 15em;" id="showData"></p> -->
+
+    <form action = "" method = "POST" style="margin-top: 5em; margin-right: 15em;  margin-left: 15em;">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="your_name">Your name: </label>
+        <input id="your_name" type="text" class="form-control" name="your_name">
+      </div>
+      
+      <div class="form-group">
+        <label for="type">Type: </label>
+        <input id="type" type="text" class="form-control" name="type">
+      </div>
+
+      <div class="form-group">
+        <label for="timestamp">Time Stamp: </label>
+        <input id="timestamp" type="text" class="form-control" name="timestamp">
+      </div>
+      
+      <input class="btn btn-primary" type="submit" value="OK">
+    </form>
+
+</body>
+
+<script>
+  function addRecord() {
+    
+  
+  }
+</script>
+
+</html>
