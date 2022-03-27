@@ -3,16 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <title>FaceMark</title>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="fireapp/css/index.css" type="text/css" media="all">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="module" src="fireapp/js/index.js"></script>
 </head>
+<script>
+      document.addEventListener("DOMContentLoaded", () => {
+        var but = document.getElementById("but");
+        var video = document.getElementById("vid");
+        var mediaDevices = navigator.mediaDevices;
+        vid.muted = true;
+        but.addEventListener("click", () => {
 
+          // Accessing the user camera and video.
+          mediaDevices
+            .getUserMedia({
+              video: true,
+              audio: true,
+            })
+            .then((stream) => {
 
+              // Changing the source of video to current stream.
+              video.srcObject = stream;
+              video.addEventListener("loadedmetadata", () => {
+                video.play();
+              });
+            })
+            .catch(alert);
+        });
+      });
+</script>
+<style>
+    video {
+      width: 500px;
+      height: 400px;
+      object-fit: cover;
+    }
+  </style>
 <body>
-<h1>Firebase & Django Integration</h1>
-
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand href = '#" >FaceMark</a>
+        <div class="collapse navbar-collapse" id="navbarColor02">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'datasets' %}">Datasets</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout/">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
 
 <a href="{% url 'attendance_list' %}" >To list</a>
 <a href="{% url 'add_record' %}" >To Add</a>
 <a href="{% url 'camera' %}" >To Camera</a>
 
-</body>
+<p>DB Connection check, name {{name}} and id {{id}}. Attendance for today : {{status}}</p>
+
+<center>
+      <div>
+        <video id="vid"></video>
+      </div>
+      <br />
+      <button id="but" autoplay>
+        Open WebCam
+      </button>
+</center>
+    </body>
 </html>
