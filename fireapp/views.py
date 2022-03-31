@@ -13,8 +13,6 @@ from PIL import Image
 
 import os
 
-from .forms import StudentNameForm
-
 # Import these methods
 from django.core.files import File
 from django.core.files.base import ContentFile
