@@ -56,25 +56,65 @@
 
 <body>
 
-    <div class="contentarea">
-        <h1>
-            Capture Images
-        </h1>
 
-        <div class="camera">
-            <video id="video">Video stream not available.</video>
-            <button id="startbutton">Take photo</button>
-        </div>
-        <canvas id="canvas">
-        </canvas>
-        <div class="output">
-            <img id="photo" alt="The screen capture will appear in this box.">
-        </div>
+    <h1>
+        Capture Images
+    </h1>
 
+    <div id="student_name_form">
+        <form id="form" method="post">
+            {% csrf_token %}
+
+            <!-- {{ form }} -->
+
+            <input type="text" name="student_name_val">
+            <input type="submit" value="Submit" name="student_name" onclick="hideForm()">
+        </form>
+    </div>
+
+    <div id="capturing_div">
+        <p>Capturing Images for {{student_name}}</p>
+    </div>
+
+    <div class="camera">
+        <video id="video">Video stream not available.</video>
+        <button id="startbutton">Take photo</button>
+    </div>
+    <canvas id="canvas">
+    </canvas>
+    <div class="output">
+        <img id="photo" alt="The screen capture will appear in this box.">
     </div>
 
 </body>
-<script type="module" src="C:\Users\paria\OneDrive\Documents\ITU\Spring-2022\SWE690-Capstone-Project\FR\FaceMark\fs.js"></script>
+<script>
+    
+    window.onload = function viewAdjust() {
+
+        hideForm();
+
+    }
+
+    function hideForm() {
+        var student = JSON.parse("{{student_name|escapejs}}")
+        alert(student)
+        var divForm = document.getElementById("student_name_form")
+
+        var divName = document.getElementById("capturing_div")
+
+        alert(student)
+        if (student != null) {
+            divName.style.display = ''
+            divForm.style.display = 'none'
+        }
+        else {
+            divName.style.display = 'none'
+            divForm.style.display = ''
+        }
+    }
+</script>
+<script type="module"
+    src="C:\Users\paria\OneDrive\Documents\ITU\Spring-2022\SWE690-Capstone-Project\FR\FaceMark\fs.js"></script>
 <script>
     (function () {
         // The width and height of the captured photo. We will set the
@@ -183,33 +223,32 @@
                 var data = canvas.toDataURL('image/png');
                 photo.setAttribute('src', data);
 
-                
+
                 //var fs = require('fs');
                 try {
                     let data1 = "This is a file containing a collection of books.";
-                
-                writeFile("C:\Users\paria\OneDrive\Documents\ITU\Spring-2022\SWE690-Capstone-Project\FR\FaceMark\fireapp\images\books.txt", data1, (err) => {
-                if (err)
-                    console.log(err);
-                else {
-                    console.log("File written successfully\n");
-                    console.log("The written has the following contents:");
-                    console.log(readFileSync("books.txt", "utf8"));
+
+                    writeFile("C:\Users\paria\OneDrive\Documents\ITU\Spring-2022\SWE690-Capstone-Project\FR\FaceMark\fireapp\images\books.txt", data1, (err) => {
+                        if (err)
+                            console.log(err);
+                        else {
+                            console.log("File written successfully\n");
+                            console.log("The written has the following contents:");
+                            console.log(readFileSync("books.txt", "utf8"));
+                        }
+                    });
                 }
-                });
-                }
-                catch (error)
-                {
+                catch (error) {
                     alert(error);
                 }
-                
-                
+
+
                 // var file = dataURItoBlob(data); 
                 // //var imagedata // get imagedata from POST request 
                 // fs.writeFile()
                 // fs.writeFile("C:\Users\paria\OneDrive\Documents\ITU\Spring-2022\SWE690-Capstone-Project\FR\FaceMark\fireapp\images\fileaditi.png", file, 'binary', function(err) { 
                 //     alert("The file was saved!"); 
-                
+
                 // });  
 
                 var link = document.createElement("a");

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>FaceMark</title>
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
@@ -19,20 +21,29 @@
             <a class="nav-item nav-link" href="{%url 'datasets' %}">Camera<span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link"href="{%url 'embeddings' %}">Embeddings</a>
             <a class="nav-item nav-link active">Train</a>
-        </div>
-    </div>
-    <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item">
-                    <a class="nav-link" href="{%url 'login' %}">Logout</a>
-                </li>
-            </ul>
-</nav>
 
-<form action='/trainModel' method=get>
-    <div class="form-group">
-            <input type="submit" value= "Train Model" class="form-control-file">
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+                <a class="nav-link" href="{%url 'login' %}">Logout</a>
+            </li>
+        </ul>
     </div>
-        </form>
+</nav>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+    <form action='/trainModel' method=post>
+        <div class="form-group">
+            {% csrf_token %}
+            <input type="submit" value="Train Model for {{student_name}}" class="form-control-file">
+        </div>
+    </form>
 
 </body>
+
 </html>
