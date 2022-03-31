@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import TemplateView
 from fireapp import views
 from django.conf import settings
@@ -26,17 +26,22 @@ from FaceMark import settings
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', views.index, name='index'),
-                  path('login.html', TemplateView.as_view(template_name='login.html')),
+                  # path('login.html', TemplateView.as_view(template_name='login.html')),
                   path('datasets.html', views.onCLickDatasets, name='datasets'),
                   path('embeddings.html', views.onClickEmbeddings, name='embeddings'),
                   path('train.html', views.onClickTrain, name='train'),
+
                   path('login.html', views.loginUser, name='login'),
 
-                  path('temp.html', views.image_upload, name='image_upload'),
+                  # path('temp.html', views.image_upload, name='image_upload'),
 
                   path('embedding', views.embedding, name='embedding'),
                   path('trainModel', views.trainModel, name='trainModel'),
                   path('attendance_list', views.attendance_list, name='attendance_list'),
                   path('add_record', views.add_record, name='add_record'),
                   path('camera', views.camera, name='camera'),
+                  path('logout/', views.logoutUser, name='logout'),
+
+                  path('temp/', include("django.contrib.auth.urls")),  # new
+                  path('postsignIn/', views.loginUser),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

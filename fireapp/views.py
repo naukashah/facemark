@@ -5,19 +5,14 @@ from django.shortcuts import render
 
 import pyrebase
 from json import dumps
-from django.core.files import File
-from django.core.files.base import ContentFile
-from django.core.files.temp import NamedTemporaryFile
 from urllib.request import urlopen
-from PIL import Image
+import json
 
 import os
 
 # Import these methods
 from django.core.files import File
-from django.core.files.base import ContentFile
 from PIL import Image
-import urllib3
 from django.core.files.temp import NamedTemporaryFile
 
 # Remember the code we copied from Firebase.
@@ -82,7 +77,7 @@ def attendance_list(request):
     # accessing our firebase data and storing it in a variable
     data = database.child('data').child('attendance').get().val()
     js_data = dumps(data)
-    # print(data)
+    print(data)
 
     context = {
         'data': js_data
@@ -90,16 +85,83 @@ def attendance_list(request):
     return render(request, 'attendance_list.html', context)
 
 
+# def postsignIn(request):
+#     print("hi")
+#     username = request.POST.get('username')
+#     password = request.POST.get('password')
+#
+#     print("form data", username, password)
+#
+#     data = database.child('data').child('login').get().val()
+#     js_data = dumps(data)
+#     print(data, type(data))
+#
+#     # json_str = json.dumps(data)
+#     # resp = json.loads(json_str)
+#     # # print(resp)
+#     # print(resp[1])
+#
+#     for x in data:
+#         print(x.__getitem__('name'), x.__getitem__('password'))
+#         if username == x.__getitem__('name') and password == x.__getitem__('password'):
+#             print('match')
+#             active_user = username
+#             print('active user', active_user)
+#
+#             context = {
+#                 'data': js_data,
+#                 'active_user': active_user
+#             }
+#             return render(request, 'login.html', context)
+#
+#         else:
+#             print('not matching')
+#             return render(request, 'login.html')
+
+
 def loginUser(request):
-    name = database.child('student').child('name').get().val()
-    password = database.child('student').child('password').get().val()
+    print("hi")
+    username = request.POST.get('username')
+    password = request.POST.get('password')
 
-    context = {
-        'name': name,
-        'password': password,
-    }
+    print("form data", username, password)
 
-    return render(request, 'login.html', context)
+    data = database.child('data').child('login').get().val()
+    js_data = dumps(data)
+    print(data, type(data))
+
+    # json_str = json.dumps(data)
+    # resp = json.loads(json_str)
+    # # print(resp)
+    # print(resp[1])
+
+    for x in data:
+        print(x.__getitem__('name'), x.__getitem__('password'))
+
+    for x in data:
+        # print(x.__getitem__('name'), x.__getitem__('password'))
+
+        if username != x.__getitem__('name') and password != x.__getitem__('password'):
+            print("if", x.__getitem__('name'), x.__getitem__('password'))
+            print('does not match')
+            continue
+
+        elif username == x.__getitem__('name') and password == x.__getitem__('password'):
+            print("else",x.__getitem__('name'), x.__getitem__('password'))
+            active_user = username
+            print('active user', active_user)
+
+            context = {
+                'data': js_data,
+                'active_user': active_user
+            }
+            return render(request, 'index.html', context)
+
+    return render(request, 'login.html')
+
+
+def logoutUser(request):
+    return render(request, 'logout.html')
 
 
 def onCLickDatasets(request):
@@ -168,7 +230,9 @@ def image_upload(request):
         # https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.amazon.com%2FLouis-Garden-Artificial-Silk-Flowers%2Fdp%2FB00YY0B2DG&psig=AOvVaw3zMAtPyVzr_elwIX9c1MDR&ust=1648100787686000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCJCOxYLE2_YCFQAAAAAdAAAAABAE
         # image.write(urlopen(path[0]).read())
         image.write(urlopen(
-            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.amazon.com%2FLouis-Garden-Artificial-Silk-Flowers%2Fdp%2FB00YY0B2DG&psig=AOvVaw3zMAtPyVzr_elwIX9c1MDR&ust=1648100787686000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCJCOxYLE2_YCFQAAAAAdAAAAABAE").read())
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.amazon.com%2FLouis-Garden-Artificial-Silk-Flowers"
+            "%2Fdp%2FB00YY0B2DG&psig=AOvVaw3zMAtPyVzr_elwIX9c1MDR&ust=1648100787686000&source=images&cd=vfe&ved"
+            "=0CAsQjRxqFwoTCJCOxYLE2_YCFQAAAAAdAAAAABAE").read())
         image.flush()
         image = File(image)
         print(image)
@@ -187,4 +251,5 @@ def image_upload(request):
         #     return redirect('/')
         # return redirect('any_url')
     return render(request, 'temp.html',
-                  context=context)  # context is like respose data we are sending back to user, that will be rendered with specified 'html file'.
+                  context=context)  # context is like respose data we are sending back to user, that will be rendered
+    # with specified 'html file'.
