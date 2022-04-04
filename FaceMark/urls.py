@@ -27,7 +27,7 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', views.index, name='index'),
                   # path('login.html', TemplateView.as_view(template_name='login.html')),
-                  path('datasets.html', views.onCLickDatasets, name='datasets'),
+                  # path('datasets.html', views.onCLickDatasets, name='datasets'),
                   path('embeddings.html', views.onClickEmbeddings, name='embeddings'),
                   path('train.html', views.onClickTrain, name='train'),
 
@@ -44,4 +44,7 @@ urlpatterns = [
 
                   path('temp/', include("django.contrib.auth.urls")),  # new
                   path('postsignIn/', views.loginUser),
+
+                  path('imageUploader', views.imageUploader),
+                  # path('add_record', views.imageUploadToFirebase, name='add_record'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
