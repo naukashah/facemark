@@ -54,37 +54,6 @@ authe = firebase.auth()
 database = firebase.database()
 
 
-def camera(request):
-    # form = StudentNameForm()
-    # context = {
-    #     'form': form,
-    #     'student_name':student_name
-    # }
-    if request.method == 'POST':
-        # User_name = request.POST["Username"]
-        # User_phone = request.POST["Userphone"]
-        # User_address = request.POST["Useraddress"]
-        # pic = request.FILES["photo"]
-        # User_info= UserDetails(User_name=User_name, User_phone=User_phone, User_address=User_address, User_pic= pic)
-        # User_info.save()    
-        # path = request.POST["src"]
-        # image = NamedTemporaryFile()
-        # image.write(urlopen(path).read())
-        # image.flush()
-        # image = File(image)
-        # name = str(image.name).split('\\')[-1]
-        # name += '.jpg'
-        # image.name = name
-        # obj = Image.objects.create(image=image)
-        # obj.save()
-        global STUDENT_NAME
-        studentName = request.POST["student_name_val"]
-        STUDENT_NAME = studentName
-        print(STUDENT_NAME)
-
-    return render(request, 'camera.html', {'student_name': STUDENT_NAME})
-
-
 def add_record(request):
     if request.method == 'POST':
         data = database.child('data').child('attendance').get().val()
@@ -450,3 +419,53 @@ def image_upload(request):
     return render(request, 'temp.html',
                   context=context)  # context is like respose data we are sending back to user, that will be rendered
     # with specified 'html file'.
+
+
+def imageUploader(request):
+    print("inside image uploader")
+    return render(request, 'image_uploader.html')
+
+
+# def camera(request):
+#     if request.method == 'POST':
+#         global STUDENT_NAME
+#         studentName = request.POST["student_name_val"]
+#         STUDENT_NAME = studentName
+#         print(STUDENT_NAME)
+#
+#     return render(request, 'camera.html', {'student_name': STUDENT_NAME})
+
+
+def camera(request):
+    if request.method == 'POST':
+        global STUDENT_NAME
+        studentName = request.POST["student_name_val"]
+        STUDENT_NAME = studentName
+        print(STUDENT_NAME)
+
+        global URL
+        url = request.POST["url"]
+        URL = url
+
+        def mysplit(s, delim=None):
+            return [x for x in s.split(delim) if x]
+
+        urls = mysplit(URL, ",")
+
+        myImages = list(dict.fromkeys(urls))
+        # print("after comma ", mylist)
+
+        data = database.child('data').child('dataset').get().val()
+
+        newData = {"id": 1,
+                   "name": STUDENT_NAME,
+                   "url": myImages
+                   }
+
+        if STUDENT_NAME is None:
+            print("name empty, not saving to db");
+        else:
+            database.child('data').child('dataset').child(len(data)).set(newData)
+            return render(request, 'camera.html', {'student_name': STUDENT_NAME})
+
+    return render(request, 'camera.html')
