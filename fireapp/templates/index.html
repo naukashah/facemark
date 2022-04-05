@@ -48,12 +48,12 @@
 {% block content %}
 {% if user.is_authenticated %}
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand href = '#" >FaceMark</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{%url 'camera' %}">Datasets</a>
+                    <a class="nav-link" href="{%url 'camera' %}">Create Datasets</a>
                 </li>
 
                 <li class="nav-item">
@@ -61,7 +61,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{%url 'add_record' %}">Add Manually</a>
+                  <a class="nav-link" href="{%url 'recognition' %}">Recognize Face</a>
                 </li>
 
             </ul>
@@ -75,18 +75,10 @@
         </div>
     </nav>
 
-
-<!--<a href="{% url 'attendance_list' %}" >To list</a>-->
-<!--<a href="{% url 'add_record' %}" >To Add</a>-->
-
 <center>
       <div>
-        <video id="vid"></video>
+        <p> Welcome to FaceMark..!</p>
       </div>
-      <br />
-      <button id="but" autoplay>
-        Open WebCam
-      </button>
 </center>
 
 {% else %}

@@ -24,27 +24,26 @@ from django.conf.urls.static import static
 from FaceMark import settings
 
 urlpatterns = [
-                  path('admin/', admin.site.urls),
-                  path('', views.index, name='index'),
-                  # path('login.html', TemplateView.as_view(template_name='login.html')),
-                  # path('datasets.html', views.onCLickDatasets, name='datasets'),
-                  path('embeddings.html', views.onClickEmbeddings, name='embeddings'),
-                  path('train.html', views.onClickTrain, name='train'),
+                path('admin/', admin.site.urls),
+                path('', views.index, name='index'),
+                
+                # Menu clicks
+                path('embeddings.html', views.onClickEmbeddings, name='embeddings'),
+                path('train.html', views.onClickTrain, name='train'),
+                path('login.html', views.loginUser, name='login'),
+                path('camera', views.camera, name='camera'),
+                path('logout/', views.logoutUser, name='logout'),
+                path('recognition.html', views.facecam_feed, name='facecam_feed'),
 
-                  path('login.html', views.loginUser, name='login'),
+                # Function calls
+                path('embedding', views.embedding, name='embedding'),
+                path('trainModel', views.trainModel, name='trainModel'),
+                path('attendance_list', views.attendance_list, name='attendance_list'),
+                path('imageUploader', views.imageUploader),
+                path('recognition', views.recognition, name='recognition'),
 
-                  # path('temp.html', views.image_upload, name='image_upload'),
-
-                  path('embedding', views.embedding, name='embedding'),
-                  path('trainModel', views.trainModel, name='trainModel'),
-                  path('attendance_list', views.attendance_list, name='attendance_list'),
-                  path('add_record', views.add_record, name='add_record'),
-                  path('camera', views.camera, name='camera'),
-                  path('logout/', views.logoutUser, name='logout'),
-
-                  path('temp/', include("django.contrib.auth.urls")),  # new
-                  path('postsignIn/', views.loginUser),
-
-                  path('imageUploader', views.imageUploader),
-                  # path('add_record', views.imageUploadToFirebase, name='add_record'),
+                path('temp/', include("django.contrib.auth.urls")),  # new
+                path('postsignIn/', views.loginUser),
+               
+                  
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

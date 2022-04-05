@@ -14,7 +14,8 @@ import os
 from django.core.files import File
 from PIL import Image
 from django.core.files.temp import NamedTemporaryFile
-
+from django.http.response import StreamingHttpResponse
+from .camera import FaceDetect
 from imutils import paths
 import numpy as np
 import imutils
@@ -54,20 +55,23 @@ authe = firebase.auth()
 database = firebase.database()
 
 
-def add_record(request):
-    if request.method == 'POST':
-        data = database.child('data').child('attendance').get().val()
-        newData = {"id": 1, "name": request.POST.get('your_name'), "timestamp": request.POST.get('timestamp'),
-                   "type": request.POST.get('type')}
-        print(request.POST.get('your_name'))
-        database.child('data').child('attendance').child(len(data)).set(newData)
-
-    return render(request, 'insert_attendance.html')
-
-
 def index(request):
     return render(request, 'index.html')
 
+def recognition(request):
+    return render(request, 'recognition.html')
+
+
+def gen(camera):
+    while True:
+            frame = camera.get_frame()
+            yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+    
+		
+def facecam_feed(request):
+	return StreamingHttpResponse(gen(FaceDetect()),
+					content_type='multipart/x-mixed-replace; boundary=frame')
 
 def attendance_list(request):
     # accessing our firebase data and storing it in a variable
@@ -190,7 +194,6 @@ def onClickEmbeddings(request):
 
 
 def onClickTrain(request):
-    # print("hi")
     name = database.child('student').child('name').get().val()
     password = database.child('student').child('password').get().val()
 
@@ -424,17 +427,6 @@ def image_upload(request):
 def imageUploader(request):
     print("inside image uploader")
     return render(request, 'image_uploader.html')
-
-
-# def camera(request):
-#     if request.method == 'POST':
-#         global STUDENT_NAME
-#         studentName = request.POST["student_name_val"]
-#         STUDENT_NAME = studentName
-#         print(STUDENT_NAME)
-#
-#     return render(request, 'camera.html', {'student_name': STUDENT_NAME})
-
 
 def camera(request):
     if request.method == 'POST':

@@ -13,32 +13,32 @@
 </head>
 
 <body>
-     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand href = '#" >FaceMark</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{%url 'camera' %}">Datasets</a>
-                </li>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand href = '#" >FaceMark</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{%url 'camera' %}">Create Datasets</a>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{%url 'attendance_list' %}">View Attendance</a>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{%url 'attendance_list' %}">View Attendance</a>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{%url 'add_record' %}">Add Manually</a>
-                </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{%url 'recognition' %}">Recognize Face</a>
+            </li>
+            
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+                <a class="nav-link" href="{%url 'logout' %}">Logout</a>
+            </li>
+        </ul>
 
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item">
-                    <a class="nav-link" href="{%url 'logout' %}">Logout</a>
-                </li>
-            </ul>
 
-
-        </div>
-    </nav>
+    </div>
+</nav>
 
 
   <!-- <input type="button" onclick="CreateTableFromJSON()"  value="Create Table From JSON" /> -->
