@@ -1,3 +1,4 @@
+import urllib
 from sys import path
 from urllib.request import urlopen
 
@@ -9,6 +10,7 @@ from urllib.request import urlopen
 import json
 
 import os
+import certifi
 
 # Import these methods
 from django.core.files import File
@@ -58,20 +60,22 @@ database = firebase.database()
 def index(request):
     return render(request, 'index.html')
 
+
 def recognition(request):
     return render(request, 'recognition.html')
 
 
 def gen(camera):
     while True:
-            frame = camera.get_frame()
-            yield (b'--frame\r\n'
-                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-    
-		
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+
 def facecam_feed(request):
-	return StreamingHttpResponse(gen(FaceDetect()),
-					content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(gen(FaceDetect()),
+                                 content_type='multipart/x-mixed-replace; boundary=frame')
+
 
 def attendance_list(request):
     # accessing our firebase data and storing it in a variable
@@ -88,40 +92,6 @@ def attendance_list(request):
         print(report_filter)
 
     return render(request, 'attendance_list.html', context)
-
-
-# def postsignIn(request):
-#     print("hi")
-#     username = request.POST.get('username')
-#     password = request.POST.get('password')
-#
-#     print("form data", username, password)
-#
-#     data = database.child('data').child('login').get().val()
-#     js_data = dumps(data)
-#     print(data, type(data))
-#
-#     # json_str = json.dumps(data)
-#     # resp = json.loads(json_str)
-#     # # print(resp)
-#     # print(resp[1])
-#
-#     for x in data:
-#         print(x.__getitem__('name'), x.__getitem__('password'))
-#         if username == x.__getitem__('name') and password == x.__getitem__('password'):
-#             print('match')
-#             active_user = username
-#             print('active user', active_user)
-#
-#             context = {
-#                 'data': js_data,
-#                 'active_user': active_user
-#             }
-#             return render(request, 'login.html', context)
-#
-#         else:
-#             print('not matching')
-#             return render(request, 'login.html')
 
 
 def loginUser(request):
@@ -170,48 +140,41 @@ def logoutUser(request):
 
 
 def onCLickDatasets(request):
-    name = database.child('student').child('name').get().val()
-    password = database.child('student').child('password').get().val()
-
-    context = {
-        'name': name,
-        'password': password,
-    }
-
-    return render(request, 'datasets.html', context)
+    return render(request, 'datasets.html')
 
 
 def onClickEmbeddings(request):
-    name = database.child('student').child('name').get().val()
-    password = database.child('student').child('password').get().val()
-
-    context = {
-        'name': name,
-        'password': password
-    }
-
-    return render(request, 'embeddings.html', context)
+    return render(request, 'embeddings.html')
 
 
 def onClickTrain(request):
-    name = database.child('student').child('name').get().val()
-    password = database.child('student').child('password').get().val()
-
-    context = {
-        'name': name,
-        'password': password,
-    }
-
-    return render(request, 'train.html', context)
+    return render(request, 'train.html')
 
 
 def callExtractEmbedding(request):
+    # extract embeddings of images
     print(STUDENT_NAME)
-    dataset = 'dataset/' + STUDENT_NAME
+    data = database.child('data').child('dataset').get().val()
+    js_data = dumps(data)
+    # print(data)
+
+    url_list = ""
+    for x in data:
+        if (x is not None) and (x.__getitem__('name') == 'Aditi Parikh'):
+            # print(x.__getitem__('url'))
+            url_list = x.__getitem__('url')
+            continue
+ 
+    # print(url_list)
+
+    # print("image from url cv2: ", img)
+
+    dataset = 'dataset'
+    # dataset = url_list
     embeddings = 'output/embeddings.pickle'
     detector = 'face_detection_model'
     embedding_model = 'openface_nn4.small2.v1.t7'
-    confidence_val = 0.5
+    confidence_val = 0.9
 
     # load our serialized face detector from disk
     messages.success(request, "[INFO] loading face detector...")
@@ -232,31 +195,62 @@ def callExtractEmbedding(request):
 
     # grab the paths to the input images in our dataset
     print("[INFO] quantifying faces...")
-    imagePaths = list(paths.list_images(dataset))
+    
+    print("Unpickling...size of file -- ", os.path.getsize(embeddings))
+    # objectRep = open(embeddings, "rb")
+    # Unpickle the objects
 
-    # initialize our lists of extracted facial embeddings and
-    # corresponding people names
-    knownEmbeddings = []
-    knownNames = []
+    # object1 = pickle.Unpickler(objectRep)
+
+    # object1.identify()
+    if os.path.getsize(embeddings) > 0:      
+        with open(embeddings, "rb") as file:
+            unpickler = pickle.Unpickler(file)
+            content = unpickler.load()
+            print("f.read()",content)
+    
+    
+    # print("f.read()",pickle.load(objectRep).get("names"))
+
+    try:
+        knownEmbeddings = content.get("embeddings")
+        knownNames = content.get("names")
+    except:
+        print("exception in load")
+        knownEmbeddings = []
+        knownNames = []
+    
 
     # initialize the total number of faces processed
     total = 0
 
     # loop over the image paths
-    for (i, imagePath) in enumerate(imagePaths):
-        # extract the person name from the image path
-        print("[INFO] processing image {}/{}".format(i + 1,
-                                                     len(imagePaths)))
-        messages.success(request, "[INFO] processing image {}/{}".format(i + 1, len(imagePaths)))
-        name = imagePath.split(os.path.sep)[-2]
+    for i in range(len(url_list)):
+        print(url_list[i])
+
+    for item in range(len(url_list)):
+        # print(url_list[i])
+        print("[INFO] processing image {}/{}".format(item + 1,
+                                                     len(url_list)))
+        messages.success(request, "[INFO] processing image {}/{}".format(item + 1, len(url_list)))
+        name = 'Aditi Parikh'
 
         # load the image, resize it to have a width of 600 pixels (while
         # maintaining the aspect ratio), and then grab the image
         # dimensions
-        image = cv2.imread(imagePath)
+        # image = cv2.imread(imagePath)
+        # image = cv2.imread("https://i.imgur.com/NyWQM6A.png")
+        # print("image from url : ", image)
+
+        print("list items: ", url_list[item])
+        req = urllib.request.urlopen(url_list[item],cafile=certifi.where())
+        arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+        image = cv2.imdecode(arr, -1)  # 'Load it as it is'
+
         image = imutils.resize(image, width=600)
         (h, w) = image.shape[:2]
 
+        image = cv2.cvtColor(image, cv2.COLOR_RGBA2RGB)
         # construct a blob from the image
         imageBlob = cv2.dnn.blobFromImage(
             cv2.resize(image, (300, 300)), 1.0, (300, 300),
@@ -310,8 +304,18 @@ def callExtractEmbedding(request):
     messages.success(request, "[INFO] serializing {} encodings...".format(total))
     # read embeddings and store in variable/obj
     data = {"embeddings": knownEmbeddings, "names": knownNames}
-    f = open(embeddings, "ab")
+    
+    # print("knownEmbeddings -->", knownEmbeddings)
+    print("knownNames -->", knownNames)
+
+    #print("length data in embeddings-->",len(data))
+    # print("data in embeddings-->",data)
+
+    f = open(embeddings, "wb")
+    # f.truncate(0)
     f.write(pickle.dumps(data))
+    # pickle.close()
+    # print("data in embeddings after-->",data)
     messages.success(request, "Embeddings Complete")
     # old variable/obj + new data append pickle file for new images
     f.close()
@@ -341,28 +345,32 @@ def callTraining(request):
     print("[INFO] loading face embeddings...")
     messages.success(request, "[INFO] loading face embeddings...")
     data = pickle.loads(open(embeddings_val, "rb").read())
-
+    # print("data --> ",data)
     # encode the labels
-    print("[INFO] encoding labels...")
+    print("[INFO] encoding labels...",data["names"])
     messages.success(request, "[INFO] encoding labels...")
     le = LabelEncoder()
     labels = le.fit_transform(data["names"])
 
     # train the model used to accept the 128-d embeddings of the face and
     # then produce the actual face recognition
-    print("[INFO] training model...")
+    print("[INFO] training model...",labels)
     messages.success(request, "[INFO] training model...")
-    recognizer = SVC(C=1.0, kernel="linear", probability=True)
+    recognizer = SVC(kernel="linear", probability=True)
     recognizer.fit(data["embeddings"], labels)
 
     # write the actual face recognition model to disk
-    f = open(recognizer_val, "ab")
+    f = open(recognizer_val, "wb")
+    # f.truncate(0)
     f.write(pickle.dumps(recognizer))
     f.close()
 
     # write the label encoder to disk
-    f = open(le_val, "ab")
+    f = open(le_val, "wb")
+    # f.truncate(0)
     f.write(pickle.dumps(le))
+    print("recognizer+le ---> ",recognizer)
+    print("recognizer+le ---> ",le)
     messages.success(request, "[INFO] training model complete...")
     # append instead of write
     # file1 = open("myfile.txt", "ab")
@@ -427,6 +435,7 @@ def image_upload(request):
 def imageUploader(request):
     print("inside image uploader")
     return render(request, 'image_uploader.html')
+
 
 def camera(request):
     if request.method == 'POST':
