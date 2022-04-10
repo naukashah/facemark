@@ -20,9 +20,13 @@ detector = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
 embedder = cv2.dnn.readNetFromTorch('openface_nn4.small2.v1.t7')
 # load the actual face recognition model along with the label encoder
 recognizer = "output/recognizer.pickle"
-recognizer = pickle.loads(open(recognizer, "rb").read())
 le = "output/le.pickle"
-le = pickle.loads(open(le, "rb").read())
+try:
+	recognizer = pickle.loads(open(recognizer, "rb").read())
+	le = pickle.loads(open(le, "rb").read())
+except:
+	pass
+
 dataset = "dataset"
 user_list = [ f.name for f in os.scandir(dataset) if f.is_dir() ]
 
@@ -133,7 +137,10 @@ class FaceDetect(object):
 				vec = embedder.forward()
 
 				# perform classification to recognize the face
+				print("predict", recognizer.predict(vec)[0])
+				print("decision", recognizer.decision_function(vec)[0])
 				preds = recognizer.predict_proba(vec)[0]
+				# print("preds --> ",preds)
 				j = np.argmax(preds)
 				proba = preds[j]
 				name = le.classes_[j]
@@ -143,11 +150,12 @@ class FaceDetect(object):
 				# associated probability
 				text = "{}: {:.2f}%".format(name, proba * 100)
 				y = startY - 10 if startY - 10 > 10 else startY + 10
-				cv2.rectangle(frame, (startX, startY), (endX, endY),
-					(0, 0, 255), 2)
-				cv2.putText(frame, text, (startX, y),
-					cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
-				self.markAttendance(name)
+				if(proba * 100 > 90):
+					cv2.rectangle(frame, (startX, startY), (endX, endY),
+						(0, 0, 255), 2)
+					cv2.putText(frame, text, (startX, y),
+						cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+					self.markAttendance(name)
 
 		# update the FPS counter
 		self.fps.update()
