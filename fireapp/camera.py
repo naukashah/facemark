@@ -80,9 +80,17 @@ class FaceDetect(object):
 				now = datetime.now()
 				dtString = now.strftime('%m/%d/%y %H:%M:%S')
 				f.writelines(f'\n{name},{dtString}')
+				student_data = database.child('data').child('dataset').get().val()
+				# print(student_data)
+				for i in range (len(student_data)):
+					
+					if ( student_data[i] != None and student_data[i].get("name") == name):
+						type = student_data[i].get("type")
+						id = student_data[i].get("id")
+
 				data = database.child('data').child('attendance').get().val()
-				newData = {"id": len(data), "name": name, "timestamp": dtString,
-						"type": "Student"}
+				newData = {"id": id, "name": name, "timestamp": dtString,
+						"type": type}
 				database.child('data').child('attendance').child(len(data)).set(newData)	
 
 	def get_frame(self):

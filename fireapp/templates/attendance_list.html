@@ -42,12 +42,15 @@
 
 
   <!-- <input type="button" onclick="CreateTableFromJSON()"  value="Create Table From JSON" /> -->
-  <form method="post" style="text-align:center">
-    {% csrf_token %}
-    <label for="month">View Report of Month:</label>
-    <input id="month" type="month" name="report_month" min="2020-01" max="2022-12">
-    <input type="submit" value="Submit">
-  </form>
+  <!-- <form method="post" style="text-align:center"> -->
+    <!-- {% csrf_token %} -->
+    <div style="text-align:center">
+    <label for="report_month">View Report of Month:</label>
+    <input id="report_month" type="month" name="report_month" min="2020-01" max="2022-12">
+    <input type="button" id="btn_filter" value="Apply" >
+    
+  </div>
+  <!-- </form> -->
 
   <p style="text-align:center; margin-top: 5em; margin-right: 15em;  margin-left: 15em;" id="showData"></p>
 
@@ -63,6 +66,7 @@
 </body>
 
 <script>
+  let filter_month = ""
   $("#json").on("click", function () {
     $("#table_id").tableHTMLExport({
       type: "json",
@@ -98,6 +102,12 @@
   $("#txt").on("click", function () {
     $("#table_id").tableHTMLExport({ type: "txt", filename: "sample.txt" });
   });
+  $("#btn_filter").on("click", function () {
+    // alert("clicked")
+    filter_month = document.getElementById("report_month").value;
+    // document.getElementById("demo").innerHTML = x;
+    CreateTableFromJSON()
+  });
 </script>
 
 <script>
@@ -109,17 +119,37 @@
 <script type="text/javascript">
   function CreateTableFromJSON() {
 
-    var data = JSON.parse("{{data|escapejs}}");
+    // var monthControl = document.getElementById('report_month').value;
+    if(filter_month == "")
+    {
+      filter_month = "2022-04"
+      document.getElementById('report_month').value = filter_month
+    }
+    
 
-    //alert("Hi..!"+data);
+    var data = JSON.parse("{{data|escapejs}}");
+    var filtered_data = []
+    for (var i = 0; i < data.length; i++) {
+      
+      if (data[i] !== null && Date.parse(data[i].timestamp) > Date.parse(filter_month)) 
+      {
+        var json_obj = {...data[i]}
+        filtered_data.push(json_obj)
+      }
+       
+    }
+    data = filtered_data
+   
+
+    // alert("Hi..!"+filtered_data.length,filtered_data);
     //var data = [{'id': 1, 'name': 'Somerset', 'timestamp': '12/22/2021', 'type': 'student'}, {'id': 2, 'name': 'Alyce', 'timestamp': '06/15/2021', 'type': 'student'}, {'id': 3, 'name': 'Cairistiona', 'timestamp': '11/22/2021', 'type': 'student'}, {'id': 4, 'name': 'Howard', 'timestamp': '05/28/2021', 'type': 'teacher'}, {'id': 5, 'name': 'Toni', 'timestamp': '06/01/2021', 'type': 'student'}, {'id': 6, 'name': 'Onofredo', 'timestamp': '09/30/2021', 'type': 'student'}, {'id': 7, 'name': 'Adda', 'timestamp': '09/29/2021', 'type': 'teacher'}, {'id': 8, 'name': 'Chelsae', 'timestamp': '05/30/2021', 'type': 'student'}, {'id': 9, 'name': 'Melody', 'timestamp': '10/28/2021', 'type': 'student'}, {'id': 10, 'name': 'Ailene', 'timestamp': '10/06/2021', 'type': 'teacher'}]
 
     // EXTRACT VALUE FOR HTML HEADER. 
 
     var col = [];
     for (var i = 0; i < data.length; i++) {
+      if (data[i] == null) continue
       for (var key in data[i]) {
-        //alert(i,data[i],key);
         if (col.indexOf(key) === -1) {
           col.push(key);
         }
@@ -143,10 +173,11 @@
 
     // ADD JSON DATA TO THE TABLE AS ROWS.
     for (var i = 0; i < data.length; i++) {
-
+      if (data[i] == null) continue
       tr = table.insertRow(-1);
-
+      
       for (var j = 0; j < col.length; j++) {
+        // alert(data[i][col[j]])
         var tabCell = tr.insertCell(-1);
         tabCell.innerHTML = data[i][col[j]];
       }
