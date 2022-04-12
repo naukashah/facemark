@@ -160,7 +160,7 @@ def callExtractEmbedding(request):
 
     url_list = ""
     for x in data:
-        if (x is not None) and (x.__getitem__('name') == 'Aditi Parikh'):
+        if (x is not None) and (x.__getitem__('name') == STUDENT_NAME):
             # print(x.__getitem__('url'))
             url_list = x.__getitem__('url')
             continue
@@ -233,7 +233,7 @@ def callExtractEmbedding(request):
         print("[INFO] processing image {}/{}".format(item + 1,
                                                      len(url_list)))
         messages.success(request, "[INFO] processing image {}/{}".format(item + 1, len(url_list)))
-        name = 'Aditi Parikh'
+        name = STUDENT_NAME
 
         # load the image, resize it to have a width of 600 pixels (while
         # maintaining the aspect ratio), and then grab the image
@@ -378,6 +378,7 @@ def callTraining(request):
 
     f.close()
 
+    STUDENT_NAME = None
 
 def trainModel(request):
     print("train model", STUDENT_NAME)
@@ -441,25 +442,23 @@ def camera(request):
     if request.method == 'POST':
         global STUDENT_NAME
         studentName = request.POST["student_name_val"]
-        STUDENT_NAME = studentName
-        print(STUDENT_NAME)
-
-        global URL
+        studentId = request.POST["student_id_val"]
+        user_type = request.POST["user_type"]
         url = request.POST["url"]
-        URL = url
+
+        STUDENT_NAME = studentName
 
         def mysplit(s, delim=None):
             return [x for x in s.split(delim) if x]
 
-        urls = mysplit(URL, ",")
-
+        urls = mysplit(url, ",")
         myImages = list(dict.fromkeys(urls))
-        # print("after comma ", mylist)
 
         data = database.child('data').child('dataset').get().val()
 
-        newData = {"id": 1,
+        newData = {"id": studentId,
                    "name": STUDENT_NAME,
+                   "type": user_type,
                    "url": myImages
                    }
 

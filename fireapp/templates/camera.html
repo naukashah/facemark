@@ -59,6 +59,15 @@
               margin-left: auto;
               margin-right: auto;
         }
+
+    [type=submit]{
+    margin-left: 445px;
+    margin-top: -64px;
+    width: 100px;
+    height: 40px;
+    font-size:14px;
+    font-weight:700;
+}
     </style>
 </head>
 
@@ -84,37 +93,84 @@
 </nav>
 
     <div id="student_name_form" class="align">
-        <form id="form" method="post">
+        <form id="form" method="post" class="row g-3 needs-validation" novalidate>
             {% csrf_token %}
 
             <!-- {{ form }} -->
-            <label for="student_name_val">Enter student name:</label>
-            <input type="text" name="student_name_val" id="student_name_val">
+             <div class="col-md-3">
+                 <div class="form-outline">
+                    <label for="student_name_val" class="form-label">Enter student name:</label>
+                    <input type="text" name="student_name_val" id="student_name_val" class="form-control input" required>
+                     <div class="valid-feedback">Valid.</div>
+                     <div class="invalid-feedback">Please fill out this field.</div>
+                     </div>
+             </div>
+
+            <div class="col-md-3">
+                 <div class="form-outline">
+                    <label for="student_id_val" class="form-label">Enter student ID:</label>
+                    <input type="text" name="student_id_val" id="student_id_val" class="form-control input" required>
+                     <div class="valid-feedback">Valid.</div>
+                     <div class="invalid-feedback">Please fill out this field.</div>
+                     </div>
+            </div>
+
+            <div class="col-md-3">
+                 <div class="form-outline">
+                    <label for="user_type" class="form-label">Select User Type:</label>
+                    <select type="text" name="user_type" id="user_type" class="form-control input" required>
+                        <option value="Student">Student</option>
+                        <option value="Teacher">Teacher</option>
+                     <div class="valid-feedback">Valid.</div>
+                     <div class="invalid-feedback">Please fill out this field.</div>
+
                 <strong>
                     <input type="hidden" id="url" name="url">
                 </strong>
-            <input type="submit" value="Submit" name="student_name" onclick="hideForm()">
+            </div>
+            <div>
+                <div>
+                    <input type="submit" value="Submit" id="student_name" name="student_name" onclick="hideForm()" class="btn btn-outline-success submitButton">
+                </div>
 
+            </div>
         </form>
     </div>
+    <div class="container pt-5">
+        <!--    <input type="button" value="Add Picture" name="add_image" onclick="addPicture()">-->
+        <div class="camera">
+            <video id="video">Video stream not available.</video>
+            <button id="startbutton">Take photo</button>
+        </div>
 
+        <canvas id="canvas">
+        </canvas>
+        <div class="output">
+            <img id="photo" alt="The screen capture will appear in this box.">
+        </div>
 
-<!--    <input type="button" value="Add Picture" name="add_image" onclick="addPicture()">-->
-    <div class="camera">
-        <video id="video">Video stream not available.</video>
-        <button id="startbutton">Take photo</button>
-    </div>
-
-    <canvas id="canvas">
-    </canvas>
-    <div class="output">
-        <img id="photo" alt="The screen capture will appear in this box.">
-    </div>
-
-    <div id="capturing_div">
-        <p>Captured Images for {{student_name}}</p>
+        <div id="capturing_div">
+            <p>Captured Images for {{student_name}}</p>
+        </div>
     </div>
 </body>
+
+ <script>
+let inputName = document.getElementById("student_name_val");
+let inputId = document.getElementById("student_id_val");
+let button = document.getElementById("student_name");
+
+button.disabled = true;
+inputName.addEventListener("change", stateHandle);
+
+function stateHandle() {
+    if(inputName.value === "" && inputId.value === "") {
+        button.disabled = true;
+    } else {
+        button.disabled = false;
+    }
+}
+</script>
 <script>
     
     window.onload = function viewAdjust() {
@@ -124,13 +180,14 @@
     }
 
     function hideForm() {
+
+
         var student = JSON.parse("{{student_name|escapejs}}")
-<!--        alert(student)-->
+
         var divForm = document.getElementById("student_name_form")
 
         var divName = document.getElementById("capturing_div")
 
-<!--        alert(student)-->
         if (student != null) {
             divName.style.display = ''
             divForm.style.display = 'none'
@@ -268,48 +325,9 @@
                 body: img
             }).then(data => data.json()).then(data => {
                 img.src = data.data.link
-
-<!--                alert("before", url.value);-->
-
-
                 url.value += url.value + "," + data.data.link
 
             })
-
-
-            //var fs = require('fs');
-<!--            try {-->
-<!--                let data1 = "This is a file containing a collection of books.";-->
-
-<!--                writeFile("C:\Users\paria\OneDrive\Documents\ITU\Spring-2022\SWE690-Capstone-Project\FR\FaceMark\fireapp\images\books.txt", data1, (err) => {-->
-<!--                    if (err)-->
-<!--                        console.log(err);-->
-<!--                    else {-->
-<!--                        console.log("File written successfully\n");-->
-<!--                        console.log("The written has the following contents:");-->
-<!--                        console.log(readFileSync("books.txt", "utf8"));-->
-<!--                    }-->
-<!--                });-->
-<!--            } catch (error) {-->
-<!--                alert(error);-->
-<!--            }-->
-
-
-            // var file = dataURItoBlob(data);
-            // //var imagedata // get imagedata from POST request
-            // fs.writeFile()
-            // fs.writeFile("C:\Users\paria\OneDrive\Documents\ITU\Spring-2022\SWE690-Capstone-Project\FR\FaceMark\fireapp\images\fileaditi.png", file, 'binary', function(err) {
-<!--            alert("The file was saved!");-->
-
-            // });
-
-            var link = document.createElement("a");
-
-            document.body.appendChild(link); // for Firefox
-
-            link.setAttribute("href", data);
-            link.setAttribute("download", "aditi");
-            link.click();
 
         } else {
             clearphoto();

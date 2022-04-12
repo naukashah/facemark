@@ -137,8 +137,8 @@ class FaceDetect(object):
 				vec = embedder.forward()
 
 				# perform classification to recognize the face
-				print("predict", recognizer.predict(vec)[0])
-				print("decision", recognizer.decision_function(vec)[0])
+				# print("predict", recognizer.predict(vec)[0])
+				# print("decision", recognizer.decision_function(vec)[0])
 				preds = recognizer.predict_proba(vec)[0]
 				# print("preds --> ",preds)
 				j = np.argmax(preds)
