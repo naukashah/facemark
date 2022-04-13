@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <head>
 
@@ -54,93 +55,96 @@
             width: 760px;
         }
 
-        .align{
+        .align {
             display: block;
-              margin-left: auto;
-              margin-right: auto;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-    [type=submit]{
-    margin-left: 445px;
-    margin-top: -64px;
-    width: 100px;
-    height: 40px;
-    font-size:14px;
-    font-weight:700;
-}
+        [type=submit] {
+            margin-left: 445px;
+            margin-top: -64px;
+            width: 100px;
+            height: 40px;
+            font-size: 14px;
+            font-weight: 700;
+        }
     </style>
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{%url 'index' %}">FaceMark</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active">Camera<span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="{%url 'embeddings' %}">Embeddings</a>
-            <a class="nav-item nav-link disabled" href="{%url 'train' %}">Train</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{%url 'index' %}">FaceMark</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active">Camera<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="{%url 'embeddings' %}">Embeddings</a>
+                <a class="nav-item nav-link disabled" href="{%url 'train' %}">Train</a>
+            </div>
         </div>
-    </div>
-     <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item">
-                    <a class="nav-link" href="{%url 'login' %}">Logout</a>
-                </li>
-            </ul>
-</nav>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+                <a class="nav-link" href="{%url 'login' %}">Logout</a>
+            </li>
+        </ul>
+    </nav>
 
     <div id="student_name_form" class="align">
         <form id="form" method="post" class="row g-3 needs-validation" novalidate>
             {% csrf_token %}
 
             <!-- {{ form }} -->
-             <div class="col-md-3">
-                 <div class="form-outline">
-                    <label for="student_name_val" class="form-label">Enter student name:</label>
-                    <input type="text" name="student_name_val" id="student_name_val" class="form-control input" required>
-                     <div class="valid-feedback">Valid.</div>
-                     <div class="invalid-feedback">Please fill out this field.</div>
-                     </div>
-             </div>
-
             <div class="col-md-3">
-                 <div class="form-outline">
-                    <label for="student_id_val" class="form-label">Enter student ID:</label>
-                    <input type="text" name="student_id_val" id="student_id_val" class="form-control input" required>
-                     <div class="valid-feedback">Valid.</div>
-                     <div class="invalid-feedback">Please fill out this field.</div>
-                     </div>
+                <div class="form-outline">
+                    <label for="student_name_val" class="form-label">Enter student name:</label>
+                    <input type="text" name="student_name_val" id="student_name_val" class="form-control input"
+                        required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>
             </div>
 
             <div class="col-md-3">
-                 <div class="form-outline">
+                <div class="form-outline">
+                    <label for="student_id_val" class="form-label">Enter student ID:</label>
+                    <input type="text" name="student_id_val" id="student_id_val" class="form-control input" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-outline">
                     <label for="user_type" class="form-label">Select User Type:</label>
                     <select type="text" name="user_type" id="user_type" class="form-control input" required>
                         <option value="Student">Student</option>
                         <option value="Teacher">Teacher</option>
-                     <div class="valid-feedback">Valid.</div>
-                     <div class="invalid-feedback">Please fill out this field.</div>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Please fill out this field.</div>
 
-                <strong>
-                    <input type="hidden" id="url" name="url">
-                </strong>
-            </div>
-            <div>
-                <div>
-                    <input type="submit" value="Submit" id="student_name" name="student_name" onclick="hideForm()" class="btn btn-outline-success submitButton">
+                        <strong>
+                            <input type="text" id="url" name="url">
+                        </strong>
                 </div>
+                <div>
+                    <div>
+                        <input type="submit" value="Submit" id="student_name" name="student_name" onclick="hideForm()"
+                            class="btn btn-outline-success submitButton">
+                    </div>
 
-            </div>
+                </div>
         </form>
     </div>
     <div class="container pt-5">
         <!--    <input type="button" value="Add Picture" name="add_image" onclick="addPicture()">-->
         <div class="camera">
             <video id="video">Video stream not available.</video>
-            <button id="startbutton">Take photo</button>
+            <button id="startbutton" onclick="start()">Start Taking photos</button>
+            <button type="button" id="stopbutton" onclick="stop()">Stop</button>
         </div>
 
         <canvas id="canvas">
@@ -150,29 +154,42 @@
         </div>
 
         <div id="capturing_div">
-            <p>Captured Images for {{student_name}}</p>
+            <p>Captured Images :</p><p id="count_images"></p>
         </div>
     </div>
 </body>
 
- <script>
-let inputName = document.getElementById("student_name_val");
-let inputId = document.getElementById("student_id_val");
-let button = document.getElementById("student_name");
-
-button.disabled = true;
-inputName.addEventListener("change", stateHandle);
-
-function stateHandle() {
-    if(inputName.value === "" && inputId.value === "") {
-        button.disabled = true;
-    } else {
-        button.disabled = false;
-    }
-}
-</script>
 <script>
-    
+    let inputName = document.getElementById("student_name_val");
+    let inputId = document.getElementById("student_id_val");
+    let button = document.getElementById("student_name");
+    let myVar
+    let count = 0;
+
+    button.disabled = true;
+    inputName.addEventListener("change", stateHandle);
+
+    function stateHandle() {
+        if (inputName.value === "" && inputId.value === "") {
+            button.disabled = true;
+        } else {
+            button.disabled = false;
+        }
+    }
+
+    function start()
+    {
+        
+        myVar = setInterval(takepicture, 1000);
+        // alert("hi in start",myVar)
+    }
+
+    function stop()
+    {
+        // alert("hi in stop",myVar)
+        clearInterval(myVar)
+    }
+
     window.onload = function viewAdjust() {
 
         hideForm();
@@ -197,11 +214,8 @@ function stateHandle() {
             divForm.style.display = ''
         }
     }
-</script>
-<script type="module"
-    src="C:\Users\paria\OneDrive\Documents\ITU\Spring-2022\SWE690-Capstone-Project\FR\FaceMark\fs.js"></script>
-<script>
-    (function() {
+
+
     // The width and height of the captured photo. We will set the
     // width to the value defined here, but the height will be
     // calculated based on the aspect ratio of the input stream.
@@ -221,6 +235,7 @@ function stateHandle() {
     var canvas = null;
     var photo = null;
     var startbutton = null;
+    var stopbutton = null;
 
     function showViewLiveResultButton() {
         if (window.self !== window.top) {
@@ -245,20 +260,21 @@ function stateHandle() {
         canvas = document.getElementById('canvas');
         photo = document.getElementById('photo');
         startbutton = document.getElementById('startbutton');
+        stopbutton = document.getElementById('stopbutton');
 
         navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: false
-            })
-            .then(function(stream) {
+            video: true,
+            audio: false
+        })
+            .then(function (stream) {
                 video.srcObject = stream;
                 video.play();
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 console.log("An error occurred: " + err);
             });
 
-        video.addEventListener('canplay', function(ev) {
+        video.addEventListener('canplay', function (ev) {
             if (!streaming) {
                 height = video.videoHeight / (video.videoWidth / width);
 
@@ -276,12 +292,7 @@ function stateHandle() {
                 streaming = true;
             }
         }, false);
-
-        startbutton.addEventListener('click', function(ev) {
-            takepicture();
-            ev.preventDefault();
-        }, false);
-
+        
         clearphoto();
     }
 
@@ -304,6 +315,18 @@ function stateHandle() {
     // other changes before drawing it.
 
     function takepicture() {
+
+        // document.getElementById("count_images").value = count;
+        document.getElementById("count_images").innerHTML = "Count: "+count;
+        count ++ 
+        
+        if (count == 3) 
+        {
+            // alert(count)
+            clearInterval(myVar)
+            count = 0
+        }
+
         const url = document.getElementById("url")
         var context = canvas.getContext('2d');
         if (width && height) {
@@ -337,7 +360,7 @@ function stateHandle() {
     // once loading is complete.
     window.addEventListener('load', startup, false);
 
-})();
+
 </script>
 
 </html>
