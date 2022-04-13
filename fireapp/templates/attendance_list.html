@@ -14,44 +14,53 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand href = '#" >FaceMark</a>
+    <a class="navbar-brand href = '#">FaceMark</a>
     <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{%url 'camera' %}">Create Datasets</a>
-            </li>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'camera' %}">Create Datasets</a>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link active" href="{%url 'attendance_list' %}">View Attendance</a>
-            </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{%url 'attendance_list' %}">View Attendance</a>
+        </li>
 
-            <li class="nav-item">
-              <a class="nav-link" href="{%url 'recognition' %}">Recognize Face</a>
-            </li>
-            
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="nav-item">
-                <a class="nav-link" href="{%url 'logout' %}">Logout</a>
-            </li>
-        </ul>
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'recognition' %}">Recognize Face</a>
+        </li>
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'logout' %}">Logout</a>
+        </li>
+      </ul>
 
 
     </div>
-</nav>
+  </nav>
 
 
-  <!-- <input type="button" onclick="CreateTableFromJSON()"  value="Create Table From JSON" /> -->
-  <!-- <form method="post" style="text-align:center"> -->
-    <!-- {% csrf_token %} -->
-    <div style="text-align:center">
-    <label for="report_month">View Report of Month:</label>
-    <input id="report_month" type="month" name="report_month" min="2020-01" max="2022-12">
-    <input type="button" id="btn_filter" value="Apply" >
-    
+  <div class="row justify-content-md-center">
+    <div class="col-md-3">
+      <label for="report_month" class="form-label">View Report of Month:</label>
+      <input id="report_month" class="form-control input" type="month" name="report_month" min="2020-01" max="2022-12">
+    </div>
+
+    <div class="col-md-3">
+      <label for="user_type" class="form-label">Select User Type:</label>
+      <select type="text" name="user_type" id="user_type" class="form-control input" required>
+        <option value="Student">Student</option>
+        <option value="Teacher">Teacher</option>
+        <option value="All" selected="selected">All</option>
+      </select>
+    </div>
+
+    <div class="center">
+      <input type="button" id="btn_filter" value="Apply" class="btn btn-primary">
+      <input type="button" id="btn_clear_filter" value="View All" class="btn btn-primary">
+    </div>
   </div>
-  <!-- </form> -->
-
   <p style="text-align:center; margin-top: 5em; margin-right: 15em;  margin-left: 15em;" id="showData"></p>
 
   <div style="text-align:center" class="lead">
@@ -67,6 +76,7 @@
 
 <script>
   let filter_month = ""
+  let filter_user_type = "All"
   $("#json").on("click", function () {
     $("#table_id").tableHTMLExport({
       type: "json",
@@ -103,46 +113,52 @@
     $("#table_id").tableHTMLExport({ type: "txt", filename: "sample.txt" });
   });
   $("#btn_filter").on("click", function () {
+    filter_user_type = document.getElementById("user_type").value
+    filter_month = document.getElementById("report_month").value
+    // alert(filter_user_type)
+    CreateTableFromJSON()
+  });
+  $("#btn_clear_filter").on("click", function () {
     // alert("clicked")
-    filter_month = document.getElementById("report_month").value;
-    // document.getElementById("demo").innerHTML = x;
+    document.getElementById("report_month").value = "";
+    filter_month = ""
+    document.getElementById("user_type").value = "All"
     CreateTableFromJSON()
   });
 </script>
 
 <script>
   window.onload = function test() {
-
+    if (filter_month == "") {
+      filter_month = "2022-04"
+      document.getElementById('report_month').value = filter_month
+    }
     CreateTableFromJSON()
   }
 </script>
 <script type="text/javascript">
   function CreateTableFromJSON() {
 
-    // var monthControl = document.getElementById('report_month').value;
-    if(filter_month == "")
-    {
-      filter_month = "2022-04"
-      document.getElementById('report_month').value = filter_month
-    }
-    
 
     var data = JSON.parse("{{data|escapejs}}");
-    var filtered_data = []
-    for (var i = 0; i < data.length; i++) {
-      
-      if (data[i] !== null && Date.parse(data[i].timestamp) > Date.parse(filter_month)) 
-      {
-        var json_obj = {...data[i]}
-        filtered_data.push(json_obj)
-      }
-       
-    }
-    data = filtered_data
-   
+    if (filter_month !== "") {
+      var filtered_data = []
+      for (var i = 0; i < data.length; i++) {
+        if (data[i] !== null) {
+          let row_date = new Date(data[i].timestamp)
+          let filter_date = new Date(filter_month)
+          if (row_date.getFullYear() == filter_date.getFullYear() && row_date.getMonth() == filter_date.getMonth() + 1) {
+            if (filter_user_type === "All" || filter_user_type.toLowerCase() == data[i].type.toLowerCase()) {
+              var json_obj = { ...data[i] }
+              filtered_data.push(json_obj)
+            }
 
-    // alert("Hi..!"+filtered_data.length,filtered_data);
-    //var data = [{'id': 1, 'name': 'Somerset', 'timestamp': '12/22/2021', 'type': 'student'}, {'id': 2, 'name': 'Alyce', 'timestamp': '06/15/2021', 'type': 'student'}, {'id': 3, 'name': 'Cairistiona', 'timestamp': '11/22/2021', 'type': 'student'}, {'id': 4, 'name': 'Howard', 'timestamp': '05/28/2021', 'type': 'teacher'}, {'id': 5, 'name': 'Toni', 'timestamp': '06/01/2021', 'type': 'student'}, {'id': 6, 'name': 'Onofredo', 'timestamp': '09/30/2021', 'type': 'student'}, {'id': 7, 'name': 'Adda', 'timestamp': '09/29/2021', 'type': 'teacher'}, {'id': 8, 'name': 'Chelsae', 'timestamp': '05/30/2021', 'type': 'student'}, {'id': 9, 'name': 'Melody', 'timestamp': '10/28/2021', 'type': 'student'}, {'id': 10, 'name': 'Ailene', 'timestamp': '10/06/2021', 'type': 'teacher'}]
+          }
+        }
+
+      }
+      data = filtered_data
+    }
 
     // EXTRACT VALUE FOR HTML HEADER. 
 
@@ -175,7 +191,7 @@
     for (var i = 0; i < data.length; i++) {
       if (data[i] == null) continue
       tr = table.insertRow(-1);
-      
+
       for (var j = 0; j < col.length; j++) {
         // alert(data[i][col[j]])
         var tabCell = tr.insertCell(-1);
