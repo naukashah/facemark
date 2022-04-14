@@ -31,7 +31,6 @@ dataset = "dataset"
 user_list = [ f.name for f in os.scandir(dataset) if f.is_dir() ]
 
 today = datetime.today()
-# /Users/naukadhabalia/git/library-management/
 attendance_csv = 'Attendance' + today.strftime(
     "%m_%d_%y") + '.csv'
 
@@ -64,6 +63,8 @@ class FaceDetect(object):
 	def __del__(self):
 		self.fps.stop()
 		cv2.destroyAllWindows()
+
+
 
 	def markAttendance(self,name):
 		if os.path.isfile(attendance_csv):
@@ -169,5 +170,3 @@ class FaceDetect(object):
 		self.fps.update()
 		ret, jpeg = cv2.imencode('.jpg', frame)
 		return jpeg.tobytes()
-	
-	

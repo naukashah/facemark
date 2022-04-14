@@ -1,41 +1,83 @@
 <html>
   <head>
     <title>Real Time Face Recognition</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.1.3/minty/bootstrap.min.css" />
+
+
+   {% load static %}
+    <!-- Bootstrap Core CSS -->
+
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="{% static "css/custom.css" %}" rel="stylesheet">
+
+    <!-- Custom Fonts from Google -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <script src="{% static "js/custom.js" %}"></script>
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.1.3/minty/bootstrap.min.css" />-->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
   <script src="https://rawcdn.githack.com/FuriosoJack/TableHTMLExport/v2.0.0/src/tableHTMLExport.js"></script>
   </head>
+  <style>
+
+    .intro{
+       background-color: rgba(3,65,109,255);
+    }
+</style>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand href = '#" >FaceMark</a>
-      <div class="collapse navbar-collapse">
-          <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                  <a class="nav-link" href="{%url 'camera' %}">Create Datasets</a>
-              </li>
-  
-              <li class="nav-item">
-                  <a class="nav-link" href="{%url 'attendance_list' %}">View Attendance</a>
-              </li>
-  
-              <li class="nav-item">
-                <a class="nav-link active" href="{%url 'recognition' %}">Recognize Face</a>
-              </li>
-              
-  
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-              <li class="nav-item">
-                  <a class="nav-link" href="{%url 'logout' %}">Logout</a>
-              </li>
-          </ul>
-  
-  
-      </div>
-  </nav>
-  
-	<img src="{% url 'facecam_feed' %}">
+    <!-- Navigation -->
+    <nav id="siteNav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Logo and responsive toggle -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="">
+                	<span class="glyphicon glyphicon-eye-open"></span>
+                	Facemark
+                </a>
+            </div>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="{%url 'home' %}">Home</a>
+                    </li>
+                    <li>
+                        <a href="{%url 'login' %}">Dataset</a>
+                    </li>
+                     <li class="active">
+                        <a href="{%url 'attendance_list' %}">View Attendance</a>
+                    </li>
+                    <li>
+                        <a href="{%url 'recognition' %}">Recognize</a>
+                    </li>
+                </ul>
+
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container -->
+    </nav>
+    <section class="intro">
+<div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <h3 class="section-heading">Recognize from Live Feed</h3>
+                </div>
+            </div>
+        </div>
+</section>
+    <section class="">
+        <div>
+             <center><img src="{% url 'facecam_feed' %}"></center>
+        </div>
+    </section>
+
+
   </body>
 </html>

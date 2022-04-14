@@ -39,11 +39,14 @@ urlpatterns = [
                 path('embedding', views.embedding, name='embedding'),
                 path('trainModel', views.trainModel, name='trainModel'),
                 path('attendance_list', views.attendance_list, name='attendance_list'),
-                path('imageUploader', views.imageUploader),
+                # path('imageUploader', views.imageUploader),
                 path('recognition', views.recognition, name='recognition'),
 
                 path('temp/', include("django.contrib.auth.urls")),  # new
                 path('postsignIn/', views.loginUser),
-               
+
+
+                path('home', views.onClickHome, name='home'),
+
                   
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT, ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

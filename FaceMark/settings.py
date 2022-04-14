@@ -131,3 +131,17 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"
+
+STATICFILES_DIRS = [
+    '/Users/naukadhabalia/git/final-project/facemark/static',
+]
+
+# PROJECT_DIR = os.path.dirname(os.path.abspath("/Users/naukadhabalia/git/final-project/facemark/"))
+# STATIC_ROOT = os.path.join(PROJECT_DIR, 'static/')
+
+# Add these new lines
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

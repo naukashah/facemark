@@ -139,8 +139,9 @@ def logoutUser(request):
     return render(request, 'logout.html')
 
 
-def onCLickDatasets(request):
-    return render(request, 'datasets.html')
+#Home -- first sceen
+def onClickHome(request):
+    return render(request, 'home.html')
 
 
 def onClickEmbeddings(request):
@@ -395,47 +396,47 @@ def trainModel(request):
     return render(request, 'train.html', context)
 
 
-def image_upload(request):
-    context = dict()
-    if request.method == 'POST':
-        username = "Nauka"
-        # username = request.POST["username"]
-        image_path = request.POST[
-            "src"]  # src is the name of input attribute in your html file, this src value is set in javascript code
-        image = NamedTemporaryFile()
-        # image.write("fireapp/images")
-        print(path[0])
-        # https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.amazon.com%2FLouis-Garden-Artificial-Silk-Flowers%2Fdp%2FB00YY0B2DG&psig=AOvVaw3zMAtPyVzr_elwIX9c1MDR&ust=1648100787686000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCJCOxYLE2_YCFQAAAAAdAAAAABAE
-        # image.write(urlopen(path[0]).read())
-        image.write(urlopen(
-            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.amazon.com%2FLouis-Garden-Artificial-Silk-Flowers"
-            "%2Fdp%2FB00YY0B2DG&psig=AOvVaw3zMAtPyVzr_elwIX9c1MDR&ust=1648100787686000&source=images&cd=vfe&ved"
-            "=0CAsQjRxqFwoTCJCOxYLE2_YCFQAAAAAdAAAAABAE").read())
-        image.flush()
-        image = File(image)
-        print(image)
-        name = str(image.name).split('\\')[-1]
-        name += '.jpg'  # store image in jpeg format
-        image.name = name
-        if image is not None:
-            print("if condition")
-            obj = Image.objects.create(title=username,
-                                       file="test_rf1.png")  # create a object of Image type defined in your model
-            obj.save()
-            context["path"] = obj.image.url  # url to image stored in my server/local device
-            context["username"] = obj.username
-        else:
-            print("else executed")
-        #     return redirect('/')
-        # return redirect('any_url')
-    return render(request, 'temp.html',
-                  context=context)  # context is like respose data we are sending back to user, that will be rendered
-    # with specified 'html file'.
+# def image_upload(request):
+#     context = dict()
+#     if request.method == 'POST':
+#         username = "Nauka"
+#         # username = request.POST["username"]
+#         image_path = request.POST[
+#             "src"]  # src is the name of input attribute in your html file, this src value is set in javascript code
+#         image = NamedTemporaryFile()
+#         # image.write("fireapp/images")
+#         print(path[0])
+#         # https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.amazon.com%2FLouis-Garden-Artificial-Silk-Flowers%2Fdp%2FB00YY0B2DG&psig=AOvVaw3zMAtPyVzr_elwIX9c1MDR&ust=1648100787686000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCJCOxYLE2_YCFQAAAAAdAAAAABAE
+#         # image.write(urlopen(path[0]).read())
+#         image.write(urlopen(
+#             "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.amazon.com%2FLouis-Garden-Artificial-Silk-Flowers"
+#             "%2Fdp%2FB00YY0B2DG&psig=AOvVaw3zMAtPyVzr_elwIX9c1MDR&ust=1648100787686000&source=images&cd=vfe&ved"
+#             "=0CAsQjRxqFwoTCJCOxYLE2_YCFQAAAAAdAAAAABAE").read())
+#         image.flush()
+#         image = File(image)
+#         print(image)
+#         name = str(image.name).split('\\')[-1]
+#         name += '.jpg'  # store image in jpeg format
+#         image.name = name
+#         if image is not None:
+#             print("if condition")
+#             obj = Image.objects.create(title=username,
+#                                        file="test_rf1.png")  # create a object of Image type defined in your model
+#             obj.save()
+#             context["path"] = obj.image.url  # url to image stored in my server/local device
+#             context["username"] = obj.username
+#         else:
+#             print("else executed")
+#         #     return redirect('/')
+#         # return redirect('any_url')
+#     return render(request, 'temp.html',
+#                   context=context)  # context is like respose data we are sending back to user, that will be rendered
+#     # with specified 'html file'.
 
 
-def imageUploader(request):
-    print("inside image uploader")
-    return render(request, 'image_uploader.html')
+# def imageUploader(request):
+#     print("inside image uploader")
+#     return render(request, 'image_uploader.html')
 
 
 def camera(request):
