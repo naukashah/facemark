@@ -28,6 +28,10 @@
         background-color: rgba(3,65,109,255);
         font-size: 16px;
         font-weight: 300;
+        color: white;
+    }
+
+    .btn-submit{
         color: rgba(3,65,109,255);
     }
 
@@ -92,7 +96,7 @@
     <form action='/trainModel' method=post>
         <div class="form-group">
             {% csrf_token %}
-            <center><input type="submit" value="Train Model for {{student_name}}" class="form-control-file"></center>
+            <center><input type="submit" value="Train Model for {{student_name}}" class="form-control-file btn-submit"></center>
         </div>
     </form>
 

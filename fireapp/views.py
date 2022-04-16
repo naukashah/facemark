@@ -33,7 +33,7 @@ import pickle
 # This can be copied by clicking on the settings icon > project settings, then scroll down in your firebase dashboard
 # from facemark.fireapp.models import user_details
 
-STUDENT_NAME = "none"
+STUDENT_NAME = "Aditi Parikh"
 
 # class views:
 #     def __init__():
@@ -81,7 +81,7 @@ def attendance_list(request):
     # accessing our firebase data and storing it in a variable
     data = database.child('data').child('attendance').get().val()
     js_data = dumps(data)
-    print(data)
+    # print(data)
 
     context = {
         'data': js_data
@@ -145,7 +145,17 @@ def onClickHome(request):
 
 
 def onClickEmbeddings(request):
-    return render(request, 'embeddings.html')
+    data = database.child('data').child('dataset').get().val()
+    js_data = dumps(data)
+    # print(data)
+
+    context = {
+        'data': js_data,
+        'user': STUDENT_NAME,
+        'complete':'false'
+    }
+
+    return render(request, 'embeddings.html',context)
 
 
 def onClickTrain(request):
@@ -154,7 +164,8 @@ def onClickTrain(request):
 
 def callExtractEmbedding(request):
     # extract embeddings of images
-    print(STUDENT_NAME)
+    STUDENT_NAME = request.POST["username"]
+    print("STUDENT_NAME",request.POST["username"])
     data = database.child('data').child('dataset').get().val()
     js_data = dumps(data)
     # print(data)
@@ -162,11 +173,11 @@ def callExtractEmbedding(request):
     url_list = ""
     for x in data:
         if (x is not None) and (x.__getitem__('name') == STUDENT_NAME):
-            # print(x.__getitem__('url'))
+            print(x.__getitem__('url'))
             url_list = x.__getitem__('url')
             continue
  
-    # print(url_list)
+    print(url_list)
 
     # print("image from url cv2: ", img)
 
@@ -208,7 +219,7 @@ def callExtractEmbedding(request):
         with open(embeddings, "rb") as file:
             unpickler = pickle.Unpickler(file)
             content = unpickler.load()
-            print("f.read()",content)
+            # print("f.read()",content)
     
     
     # print("f.read()",pickle.load(objectRep).get("names"))
@@ -323,14 +334,22 @@ def callExtractEmbedding(request):
 
 
 def embedding(request):
-    print("extracting function", STUDENT_NAME)
+    data = database.child('data').child('dataset').get().val()
+    js_data = dumps(data)
 
     context = {
-        'student_name': STUDENT_NAME
+        'data': js_data,
+        'user': STUDENT_NAME,
+        'complete':'true'
     }
-
+    print(request.POST)
     if request.method == 'POST':
-        callExtractEmbedding(request)
+        if 'create_btn_embedding' in request.POST:
+            print("in if--embedding")
+            callExtractEmbedding(request)
+        elif 'create_btn_training' in request.POST:
+            print("in else--training")
+            callTraining(request)
     #  os.system('python3 extract_embeddings.py')
     # os.system('python extract_embeddings.py --dataset dataset --embeddings output/embeddings.pickle --detector face_detection_model --embedding-model openface_nn4.small2.v1.t7')
 
