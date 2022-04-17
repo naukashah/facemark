@@ -119,10 +119,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = '/static/'
 
 # Default primary key field type
@@ -136,10 +132,6 @@ STATICFILES_DIRS = [
     '/Users/naukadhabalia/git/final-project/facemark/static',
 ]
 
-# PROJECT_DIR = os.path.dirname(os.path.abspath("/Users/naukadhabalia/git/final-project/facemark/"))
-# STATIC_ROOT = os.path.join(PROJECT_DIR, 'static/')
-
-# Add these new lines
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )

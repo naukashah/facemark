@@ -1,7 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
 class UserDetails(models.Model):
     User_name = models.CharField(max_length=300)
     User_phone = models.BigIntegerField()

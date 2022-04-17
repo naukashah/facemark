@@ -14,39 +14,30 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.conf.urls.static import static
 from django.urls import path, include
-from django.views.generic import TemplateView
 from fireapp import views
-from django.conf import settings
 from django.conf.urls.static import static
-
 from FaceMark import settings
 
 urlpatterns = [
                 path('admin/', admin.site.urls),
-                path('', views.index, name='index'),
+                path('', views.onClickHome, name='home'),
                 
                 # Menu clicks
                 path('embeddings.html', views.onClickEmbeddings, name='embeddings'),
-                path('train.html', views.onClickTrain, name='train'),
-                path('login.html', views.loginUser, name='login'),
+                # path('loginUser.html', views.loginUser, name='login'),
                 path('camera', views.camera, name='camera'),
                 path('logout/', views.logoutUser, name='logout'),
                 path('recognition.html', views.facecam_feed, name='facecam_feed'),
+
 
                 # Function calls
                 path('embedding', views.embedding, name='embedding'),
                 path('trainModel', views.trainModel, name='trainModel'),
                 path('attendance_list', views.attendance_list, name='attendance_list'),
-                # path('imageUploader', views.imageUploader),
                 path('recognition', views.recognition, name='recognition'),
-
                 path('temp/', include("django.contrib.auth.urls")),  # new
                 path('postsignIn/', views.loginUser),
-
-
+                path('loginUser', views.loginUser, name="loginUser"),
                 path('home', views.onClickHome, name='home'),
-
-                  
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT, ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

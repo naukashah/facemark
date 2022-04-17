@@ -1,38 +1,25 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Attendance Report</title>
-
    {% load static %}
-    <!-- Bootstrap Core CSS -->
-
     <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
-
-    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
     <link href="{% static "css/custom.css" %}" rel="stylesheet">
-
-    <!-- Custom Fonts from Google -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <script src="{% static "js/custom.js" %}"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
   <script src="https://rawcdn.githack.com/FuriosoJack/TableHTMLExport/v2.0.0/src/tableHTMLExport.js"></script>
-
 </head>
 <style>
-
     .intro{
        background-color: rgba(3,65,109,255);
     }
 </style>
-
 <body>
-<!-- Navigation -->
     <nav id="siteNav" class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
-            <!-- Logo and responsive toggle -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
                     <span class="sr-only">Toggle navigation</span>
@@ -45,7 +32,6 @@
                 	Facemark
                 </a>
             </div>
-            <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
@@ -61,12 +47,9 @@
                         <a href="{%url 'recognition' %}">Recognize</a>
                     </li>
                 </ul>
-
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container -->
+            </div>
+        </div>
     </nav>
-
-<!-- Intro Section -->
 <section class="intro">
 <div class="container">
             <div class="row">
@@ -76,15 +59,12 @@
             </div>
         </div>
 </section>
-
 <section class="content section-content">
-
   <div class="row justify-content-center">
     <div class="col-md-2">
       <label for="report_month" class="form-label">View Report of Month:</label>
       <input id="report_month" class="form-control input" type="month" name="report_month" min="2020-01" max="2022-12">
     </div>
-
     <div class="col-md-2">
       <label for="user_type" class="form-label">Select User Type:</label>
       <select type="text" name="user_type" id="user_type" class="form-control input" required>
@@ -93,7 +73,6 @@
         <option value="All" selected="selected">All</option>
       </select>
     </div>
-
     <div>
         <br>
       <input type="button" id="btn_filter" value="Apply" class="btn btn-primary">
@@ -101,7 +80,6 @@
     </div>
   </div>
   <p style="text-align:center; margin-top: 5em; margin-right: 15em;  margin-left: 15em;" id="showData"></p>
-
   <div style="text-align:center" class="lead">
     <p> Download File as: </p>
     <button id="json" class="btn btn-primary">JSON</button>
@@ -110,9 +88,7 @@
     <button id="txt" class="btn btn-success">TXT</button>
   </div>
 </section>
-
 </body>
-
 <script>
   let filter_month = ""
   let filter_user_type = "All"
@@ -125,27 +101,17 @@
   $("#csv").on("click", function () {
     $("#table_id").tableHTMLExport({ type: "csv", filename: "sample.csv" });
   });
-  // $("#pdf").on("click", function () {
-  //   //alert("clicked");
-  //   //window.print();
-  //   $("#showData").tableHTMLExport({ type: "pdf", filename: "sample.pdf",ignoreColumns:'.acciones,#primero',ignoreRows: '#ultimo' });
-
-  // });
   $("#pdf").on("click", function () {
     var mywindow = window.open('', 'PRINT');
-
     mywindow.document.write('<html><head><title>' + document.title + '</title>');
     mywindow.document.write('</head><body >');
     mywindow.document.write('<h1>' + document.title + '</h1>');
     mywindow.document.write(document.getElementById("showData").innerHTML);
     mywindow.document.write('</body></html>');
-
     mywindow.document.close(); // necessary for IE >= 10
     mywindow.focus(); // necessary for IE >= 10*/
-
     mywindow.print();
     mywindow.close();
-
     return true;
   });
   $("#txt").on("click", function () {
@@ -154,18 +120,15 @@
   $("#btn_filter").on("click", function () {
     filter_user_type = document.getElementById("user_type").value
     filter_month = document.getElementById("report_month").value
-    // alert(filter_user_type)
     CreateTableFromJSON()
   });
   $("#btn_clear_filter").on("click", function () {
-    // alert("clicked")
     document.getElementById("report_month").value = "";
     filter_month = ""
     document.getElementById("user_type").value = "All"
     CreateTableFromJSON()
   });
 </script>
-
 <script>
   window.onload = function test() {
     if (filter_month == "") {
@@ -177,8 +140,6 @@
 </script>
 <script type="text/javascript">
   function CreateTableFromJSON() {
-
-
     var data = JSON.parse("{{data|escapejs}}");
     if (filter_month !== "") {
       var filtered_data = []
@@ -191,16 +152,12 @@
               var json_obj = { ...data[i] }
               filtered_data.push(json_obj)
             }
-
           }
         }
-
       }
       data = filtered_data
     }
-
-    // EXTRACT VALUE FOR HTML HEADER. 
-
+    // EXTRACT VALUE FOR HTML HEADER.
     var col = [];
     for (var i = 0; i < data.length; i++) {
       if (data[i] == null) continue
@@ -215,34 +172,28 @@
     var table = document.createElement("table");
     table.setAttribute("id", "table_id");
     table.setAttribute("class", "table table-bordered");
+
     // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
-
     var tr = table.insertRow(-1);                   // TABLE ROW.
-
     for (var i = 0; i < col.length; i++) {
       var th = document.createElement("th");      // TABLE HEADER.
       th.setAttribute("class", "thead-dark");
       th.innerHTML = col[i].toUpperCase();
       tr.appendChild(th);
     }
-
     // ADD JSON DATA TO THE TABLE AS ROWS.
     for (var i = 0; i < data.length; i++) {
       if (data[i] == null) continue
       tr = table.insertRow(-1);
-
       for (var j = 0; j < col.length; j++) {
-        // alert(data[i][col[j]])
         var tabCell = tr.insertCell(-1);
         tabCell.innerHTML = data[i][col[j]];
       }
     }
-
     // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
     var divContainer = document.getElementById("showData");
     divContainer.innerHTML = "";
     divContainer.appendChild(table);
   }
 </script>
-
 </html>

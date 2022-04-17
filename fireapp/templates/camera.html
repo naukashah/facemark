@@ -1,23 +1,13 @@
 <!DOCTYPE html>
 <html>
-<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"-->
-<!--    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
 {% load static %}
-<!-- Bootstrap Core CSS -->
-
-<link href="{% static " css/bootstrap.min.css" %}" rel="stylesheet">
-
-<!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
-<link href="{% static " css/custom.css" %}" rel="stylesheet">
-
-<!-- Custom Fonts from Google -->
+<link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+<link href="{% static "css/custom.css" %}" rel="stylesheet">
 <link
     href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
     rel='stylesheet' type='text/css'>
-<script src="{% static " js/custom.js" %}"></script>
-
+<script src="{% static "js/custom.js" %}"></script>
 <head>
-
     <style>
         .intro {
             background-color: rgba(3, 65, 109, 255);
@@ -82,22 +72,20 @@
             border: 15px solid rgba(3, 65, 109, 255);
             padding: 50px;
             margin: 10px;
+            text-align: center;
         }
-
-
 
         .crop img {
             width: 500px;
             height: 100%;
         }
+
     </style>
 </head>
 
 <body>
-    <!-- Navigation -->
     <nav id="siteNav" class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
-            <!-- Logo and responsive toggle -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
                     <span class="sr-only">Toggle navigation</span>
@@ -110,7 +98,6 @@
                     Facemark
                 </a>
             </div>
-            <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
@@ -119,61 +106,45 @@
                     <li class="active">
                         <a href="{%url 'camera' %}">Create Datasets</a>
                     </li>
-                    <li>
-                        <a href="{%url 'embeddings' %}">Embeddings</a>
-                    </li>
-                    <li>
-                        <a href="{%url 'train' %}">Train</a>
+                     <li>
+                        <a href="{%url 'embeddings' %}">Train</a>
                     </li>
                     <li>
                         <a href="{%url 'logout' %}">Logout</a>
                     </li>
                 </ul>
-
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container -->
+            </div>
+        </div>
     </nav>
 
     <section class="intro">
         <div class="container">
             <h4>Add details and capture images for dataset</h4>
-
         </div>
     </section>
 
     <div id="student_name_form" class="align">
         <form id="form" method="post" class="row g-3 needs-validation" novalidate>
             {% csrf_token %}
-
-            <!-- {{ form }} -->
             <div class="col-md-3">
                 <div class="form-outline">
                     <label for="student_name_val" class="form-label">Enter student name:</label>
                     <input type="text" name="student_name_val" id="student_name_val" class="form-control input"
                         required>
-                    <!--                    <div class="valid-feedback">Valid.</div>-->
-                    <!--                    <div class="invalid-feedback">Please fill out this field.</div>-->
                 </div>
             </div>
-
             <div class="col-md-3">
                 <div class="form-outline">
                     <label for="student_id_val" class="form-label">Enter student ID:</label>
                     <input type="text" name="student_id_val" id="student_id_val" class="form-control input" required>
-                    <!--                    <div class="valid-feedback">Valid.</div>-->
-                    <!--                    <div class="invalid-feedback">Please fill out this field.</div>-->
                 </div>
             </div>
-
             <div class="col-md-3">
                 <div class="form-outline">
                     <label for="user_type" class="form-label">Select User Type:</label>
                     <select type="text" name="user_type" id="user_type" class="form-control input" required>
                         <option value="Student">Student</option>
                         <option value="Teacher">Teacher</option>
-                        <!--                        <div class="valid-feedback">Valid.</div>-->
-                        <!--                        <div class="invalid-feedback">Please fill out this field.</div>-->
-
                         <strong>
                             <input type="hidden" id="url" name="url">
                         </strong>
@@ -182,33 +153,27 @@
             <div>
                 <div>
                     <br>
-                    <input type="submit" value="Submit" id="student_name" name="student_name" onclick="hideForm()"
+                    <input type="submit" value="Save" id="student_name" name="student_name" onclick="hideForm()"
                         class="btn btn-outline-success submitButton">
                 </div>
-
             </div>
-
         </form>
     </div>
     <div class="container pt-5 box">
-        <!--    <input type="button" value="Add Picture" name="add_image" onclick="addPicture()">-->
         <div class="camera">
             <video id="video">Video stream not available.</video>
             <button id="startbutton" onclick="start()">Start Taking photos</button>
-            <!-- <button type="button" id="stopbutton" onclick="stop()">Stop</button> -->
         </div>
-
         <canvas id="canvas">
         </canvas>
         <div class="output">
             <img id="photo" alt="The screen capture will appear in this box.">
         </div>
-
         <div id="capturing_div">
             <p id="count_images"></p>
         </div>
-
         <div class="crop">
+            <p>"Start Taking" photos will take 5 images at a time, 3 seconds apart.<br> To help ensure accuracy we recommend 10 images per person.<br>For optimal face training use below ideal face poses.</p>
             <img src="../images/ideal_poses.jpg">
         </div>
     </div>
@@ -220,10 +185,8 @@
     let button = document.getElementById("student_name");
     let myVar
     let count = 0;
-
     button.disabled = true;
     inputName.addEventListener("change", stateHandle);
-
     function stateHandle() {
         if (inputName.value === "" && inputId.value === "") {
             button.disabled = true;
@@ -234,19 +197,13 @@
     function start() {
         myVar = setInterval(takepicture, 2000);
     }
-
     window.onload = function viewAdjust() {
         hideForm();
     }
-
     function hideForm() {
-
         var student = JSON.parse("{{student_name|escapejs}}")
-
         var divForm = document.getElementById("student_name_form")
-
         var divName = document.getElementById("capturing_div")
-
         if (student != null) {
             divName.style.display = ''
             divForm.style.display = 'none'
@@ -257,22 +214,9 @@
         }
     }
 
-
-    // The width and height of the captured photo. We will set the
-    // width to the value defined here, but the height will be
-    // calculated based on the aspect ratio of the input stream.
-
     var width = 320; // We will scale the photo width to this
     var height = 0; // This will be computed based on the input stream
-
-    // |streaming| indicates whether or not we're currently streaming
-    // video from the camera. Obviously, we start at false.
-
     var streaming = false;
-
-    // The various HTML elements we need to configure or control. These
-    // will be set by the startup() function.
-
     var video = null;
     var canvas = null;
     var photo = null;
@@ -303,7 +247,6 @@
         photo = document.getElementById('photo');
         startbutton = document.getElementById('startbutton');
         stopbutton = document.getElementById('stopbutton');
-
         navigator.mediaDevices.getUserMedia({
             video: true,
             audio: false
@@ -319,14 +262,9 @@
         video.addEventListener('canplay', function (ev) {
             if (!streaming) {
                 height = video.videoHeight / (video.videoWidth / width);
-
-                // Firefox currently has a bug where the height can't be read from
-                // the video, so we will make assumptions if this happens.
-
-                if (isNaN(height)) {
+               if (isNaN(height)) {
                     height = width / (4 / 3);
                 }
-
                 video.setAttribute('width', width);
                 video.setAttribute('height', height);
                 canvas.setAttribute('width', width);
@@ -334,40 +272,23 @@
                 streaming = true;
             }
         }, false);
-
         clearphoto();
     }
-
-    // Fill the photo with an indication that none has been
-    // captured.
 
     function clearphoto() {
         var context = canvas.getContext('2d');
         context.fillStyle = "#AAA";
         context.fillRect(0, 0, canvas.width, canvas.height);
-
         var data = canvas.toDataURL('image/png');
         photo.setAttribute('src', data);
     }
 
-    // Capture a photo by fetching the current contents of the video
-    // and drawing it into a canvas, then converting that to a PNG
-    // format data URL. By drawing it on an offscreen canvas and then
-    // drawing that to the screen, we can change its size and/or apply
-    // other changes before drawing it.
-
     function takepicture() {
-
-        // document.getElementById("count_images").value = count;
         document.getElementById("count_images").innerHTML = "Images captured: " + parseInt(count + 1);
         count++
-
-        if (count == 5) {
-            // alert(count)
+        if (parseInt(count%5) == 0) {
             clearInterval(myVar)
-            count = 0
         }
-
         const url = document.getElementById("url")
         var context = canvas.getContext('2d');
         if (width && height) {
@@ -377,7 +298,6 @@
             var data = canvas.toDataURL('image/png');
             photo.setAttribute('src', data);
             var img = data.split(',')[1];
-
             fetch("https://api.imgur.com/3/image/", {
                 method: "post",
                 headers: {
@@ -388,13 +308,10 @@
                 img.src = data.data.link
                 url.value += url.value + "," + data.data.link
             })
-
         } else {
             clearphoto();
         }
     }
-    // Set up our event listener to run the startup process
-    // once loading is complete.
     window.addEventListener('load', startup, false);
 
 </script>
