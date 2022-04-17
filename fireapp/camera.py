@@ -19,8 +19,6 @@ try:
 except:
     pass
 
-dataset = "dataset"
-user_list = [f.name for f in os.scandir(dataset) if f.is_dir()]
 today = datetime.today()
 attendance_csv = 'Attendance' + today.strftime(
     "%m_%d_%y") + '.csv'
