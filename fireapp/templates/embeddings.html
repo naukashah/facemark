@@ -103,6 +103,7 @@
         var data = JSON.parse("{{data|escapejs}}");
         var user_name = "{{user}}"
         var complete_flag = "{{complete}}"
+        
         if (complete_flag === "true") {
             document.getElementById("create_btn_embedding").style.display = "none";
             document.getElementById("create_btn_training").style.display = "block";
@@ -129,6 +130,10 @@
                 option.text = val.charAt(0).toUpperCase() + val.slice(1);
                 select.appendChild(option);
             }
+            select.options[0].selected = true;
+            document.getElementById("create_btn_embedding").value = "Create Embeddings for " + select.options[0].text;
+            document.getElementById("username").value = select.options[0].text;
+            document.getElementById("after_embedding_text").innerHTML = "Embeddings created for"+select.options[0].text;
             for (var i = 0; i < select.options.length; i++) {
                 if ((select.options[i].text).toLowerCase() == user_name.toLowerCase()) {
                     select.options[i].selected = true;

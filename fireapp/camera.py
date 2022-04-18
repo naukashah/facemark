@@ -64,6 +64,7 @@ class FaceDetect(object):
                 dtString = now.strftime('%m/%d/%y %H:%M:%S')
                 f.writelines(f'\n{name},{dtString}')
                 student_data = database.child('data').child('dataset').get().val()
+                id = 0
                 for i in range(len(student_data)):
                     if (student_data[i] != None and student_data[i].get("name") == name):
                         type = student_data[i].get("type")
@@ -100,15 +101,21 @@ class FaceDetect(object):
                 preds = recognizer.predict_proba(vec)[0]
                 j = np.argmax(preds)
                 proba = preds[j]
-                name = le.classes_[j]
-                text = "{}: {:.2f}%".format(name, proba * 100)
+                
+                # text = "{}: {:.2f}%".format(name, proba * 100)
                 y = startY - 10 if startY - 10 > 10 else startY + 10
-                if (proba * 100 > 90):
+                if (proba * 100 > 70):
+                    name = le.classes_[j]
                     cv2.rectangle(frame, (startX, startY), (endX, endY),
-                                  (0, 0, 255), 2)
-                    cv2.putText(frame, text, (startX, y),
+                                    (0, 0, 255), 2)
+                    cv2.putText(frame, name, (startX, y),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
                     self.markAttendance(name)
+                else:
+                    cv2.rectangle(frame, (startX, startY), (endX, endY),
+                                    (0, 0, 255), 2)
+                    cv2.putText(frame, "Unknown", (startX, y),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
         self.fps.update()
         ret, jpeg = cv2.imencode('.jpg', frame)

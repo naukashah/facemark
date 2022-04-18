@@ -140,9 +140,12 @@ def callExtractEmbedding(request):
         knownNames = []
     total = 0
     for item in range(len(url_list)):
+        print("[INFO] processing image {}/{}".format(item + 1, len(url_list)))
         messages.success(request, "[INFO] processing image {}/{}".format(item + 1, len(url_list)))
         name = STUDENT_NAME
-        req = urllib.request.urlopen(url_list[item],cafile=certifi.where())
+        requ = urllib.request.Request(url_list[item], headers = {'User-Agent': 'Mozilla/5.0'})
+        req = urllib.request.urlopen(requ,cafile=certifi.where())
+        print(url_list[item])
         arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
         image = cv2.imdecode(arr, -1)  # 'Load it as it is'
         image = imutils.resize(image, width=600)
