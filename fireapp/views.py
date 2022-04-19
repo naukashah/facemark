@@ -106,14 +106,15 @@ def onClickEmbeddings(request):
 
 def callExtractEmbedding(request):
     STUDENT_NAME = request.POST["username"]
+    print(STUDENT_NAME)
     data = database.child('data').child('dataset').get().val()
     js_data = dumps(data)
     url_list = ""
     for x in data:
-        if (x is not None) and (x.__getitem__('name') == STUDENT_NAME):
+        if (x is not None) and ((x.__getitem__('name')).lower() == STUDENT_NAME.lower()):
             url_list = x.__getitem__('url')
             continue
- 
+    print(url_list)
     dataset = 'dataset'
     embeddings = 'output/embeddings.pickle'
     detector = 'face_detection_model'
@@ -178,6 +179,7 @@ def callExtractEmbedding(request):
     data = {"embeddings": knownEmbeddings, "names": knownNames}
     f = open(embeddings, "wb")
     f.write(pickle.dumps(data))
+    print(data)
     messages.success(request, "Embeddings Complete")
     f.close()
 
@@ -208,8 +210,9 @@ def callTraining(request):
     messages.success(request, "[INFO] encoding labels...")
     le = LabelEncoder()
     labels = le.fit_transform(data["names"])
+    print(labels)
     messages.success(request, "[INFO] training model...")
-    recognizer = SVC(kernel="linear", probability=True)
+    recognizer = SVC(C=100,kernel="rbf", probability=True,gamma=1)
     recognizer.fit(data["embeddings"], labels)
     f = open(recognizer_val, "wb")
     f.write(pickle.dumps(recognizer))
@@ -218,6 +221,7 @@ def callTraining(request):
     f.write(pickle.dumps(le))
     messages.success(request, "[INFO] training model complete...")
     f.close()
+    global STUDENT_NAME
     STUDENT_NAME = None
 
 def trainModel(request):

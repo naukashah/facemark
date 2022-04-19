@@ -79,6 +79,7 @@ class FaceDetect(object):
         frame = cv2.flip(frame, 1)
         frame = imutils.resize(frame, width=600)
         (h, w) = frame.shape[:2]
+        # frame = cv2.cvtColor(frame, cv2.COLOR_RGBA2RGB)
         imageBlob = cv2.dnn.blobFromImage(
             cv2.resize(frame, (300, 300)), 1.0, (300, 300),
             (104.0, 177.0, 123.0), swapRB=False, crop=False)
@@ -101,21 +102,29 @@ class FaceDetect(object):
                 preds = recognizer.predict_proba(vec)[0]
                 j = np.argmax(preds)
                 proba = preds[j]
-                
+                print(preds)
                 # text = "{}: {:.2f}%".format(name, proba * 100)
                 y = startY - 10 if startY - 10 > 10 else startY + 10
-                if (proba * 100 > 70):
-                    name = le.classes_[j]
-                    cv2.rectangle(frame, (startX, startY), (endX, endY),
-                                    (0, 0, 255), 2)
-                    cv2.putText(frame, name, (startX, y),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+                name = le.classes_[j]
+                cv2.rectangle(frame, (startX, startY), (endX, endY),
+                                (0, 0, 255), 2)
+                cv2.putText(frame, name, (startX, y),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+                if(name != 'Unknown'):
                     self.markAttendance(name)
-                else:
-                    cv2.rectangle(frame, (startX, startY), (endX, endY),
-                                    (0, 0, 255), 2)
-                    cv2.putText(frame, "Unknown", (startX, y),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+                # if (proba * 100 > 50):
+                #     name = le.classes_[j]
+                #     cv2.rectangle(frame, (startX, startY), (endX, endY),
+                #                     (0, 0, 255), 2)
+                #     cv2.putText(frame, name, (startX, y),
+                #                 cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+                #     if(name != 'Unknown'):
+                #         self.markAttendance(name)
+                # else:
+                #     cv2.rectangle(frame, (startX, startY), (endX, endY),
+                #                     (0, 0, 255), 2)
+                #     cv2.putText(frame, "Unknown", (startX, y),
+                #                 cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
         self.fps.update()
         ret, jpeg = cv2.imencode('.jpg', frame)
