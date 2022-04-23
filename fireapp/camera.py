@@ -60,19 +60,26 @@ class FaceDetect(object):
                 entry = line.split(',')
                 nameList.append(entry[0])
             if name not in nameList:
+                # print("in if",name)
                 now = datetime.now()
                 dtString = now.strftime('%m/%d/%y %H:%M:%S')
                 f.writelines(f'\n{name},{dtString}')
                 student_data = database.child('data').child('dataset').get().val()
                 id = 0
+                type = None
                 for i in range(len(student_data)):
-                    if (student_data[i] != None and student_data[i].get("name") == name):
-                        type = student_data[i].get("type")
-                        id = student_data[i].get("id")
+                    if (student_data[i] != None):
+                        # print(student_data[i].get("name").lower() == name.lower())
+                        if(student_data[i].get("name").lower() == name.lower()):
+                            type = student_data[i].get("type")
+                            id = student_data[i].get("id")
                 data = database.child('data').child('attendance').get().val()
-                newData = {"id": id, "name": name, "timestamp": dtString,
+                if(id != 0 and type != None):
+                    # print("in if 2",name)
+                    newData = {"id": id, "name": name, "timestamp": dtString,
                            "type": type}
-                database.child('data').child('attendance').child(len(data)).set(newData)
+                    database.child('data').child('attendance').child(len(data)).set(newData)
+                    # print(newData)
 
     def get_frame(self):
         frame = self.vs.read()
@@ -102,7 +109,7 @@ class FaceDetect(object):
                 preds = recognizer.predict_proba(vec)[0]
                 j = np.argmax(preds)
                 proba = preds[j]
-                print(preds)
+                # print(preds)
                 # text = "{}: {:.2f}%".format(name, proba * 100)
                 y = startY - 10 if startY - 10 > 10 else startY + 10
                 name = le.classes_[j]
@@ -110,6 +117,7 @@ class FaceDetect(object):
                                 (0, 0, 255), 2)
                 cv2.putText(frame, name, (startX, y),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+                # print(name != 'Unknown')
                 if(name != 'Unknown'):
                     self.markAttendance(name)
                 # if (proba * 100 > 50):
